@@ -48,7 +48,7 @@ def fibonacci():
             print(f'Received: {data}')
 
             if data:
-                n = int.from_bytes(data, byteorder='big')
+                n = int.from_bytes(data, byteorder='little')
                 f_value = get_fibonacci_value(n)
                 print(f'Sending response to client...')
                 client_socket.send(f_value.to_bytes(4, byteorder='big'))
