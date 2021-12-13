@@ -87,7 +87,7 @@ def recognition(image):
 
 
 if __name__ == '__main__':
-    # recognition('man1.jpg')
+    recognition('man1.jpg')
     with open('recognition/man1.jpg', 'rb') as f:
         image = f.read()
     recognition(image)
