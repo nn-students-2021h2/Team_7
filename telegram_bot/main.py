@@ -1,77 +1,74 @@
-import requests
-import json
+# -*- coding: utf-8 -*-
+import logging
 
-from telegram_bot.recgtn import recognition
+from setup import TOKEN
+from telegram import Bot, Update
+from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
-TOKEN = ''
-BASE_URL = f"https://api.telegram.org/bot{TOKEN}/"
-DOWNLOAD_URL = f'https://api.telegram.org/file/bot{TOKEN}/'
-LONG_POLLING_TIMEOUT = 10
+from telegram_bot.recognize import processing_image
 
+# Enable logging
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
 
-def get_photo(msg):
-    photos = msg.get('photo')
-    if photos:
-        file_id = photos[-1]['file_id']
-        r = requests.get(BASE_URL + f'getFile?file_id={file_id}')
-        file_path = r.json()['result']['file_path']
-        photo_bytes = requests.get(DOWNLOAD_URL + file_path).content
-        return photo_bytes
-    return
+logger = logging.getLogger(__name__)
+bot = Bot(token=TOKEN)
 
 
-def send_photo(chat_id, photo_bytes, caption=''):
-    files = {
-        'photo': photo_bytes
-    }
-    if caption:
-        message = (BASE_URL + f'sendPhoto?chat_id={chat_id}&caption={caption}')
+def start(update: Update, context: CallbackContext):
+    """Send a message when the command /start is issued."""
+    update.message.reply_text(f'Привет, {update.effective_user.first_name}!')
+    update.message.reply_text('Отправь мне фото. Я распознаю на нём лица и определю пол и возраст')
+
+
+def chat_help(update: Update, context: CallbackContext):
+    """Send a message when the command /help is issued."""
+    update.message.reply_text('Введи команду /start для начала')
+
+
+def error(update: Update, context: CallbackContext):
+    """Log Errors caused by Updates."""
+    logger.warning(f'Update {update} caused error {context.error}')
+    update.message.reply_text('Упс... Что-то пошло не так. Попробуй позже')
+
+
+def photo_recognize(update: Update, context: CallbackContext):
+    update.message.reply_text('Обработка изображения...')
+    input_photo = bot.get_file(update.message.photo[-1]['file_id'])
+    output_photo = processing_image(input_photo)
+
+    if output_photo:
+        update.message.reply_photo(photo=output_photo)
     else:
-        message = (BASE_URL + f'sendPhoto?chat_id={chat_id}')
-    send = requests.post(message, files=files)
+        update.message.reply_text('Лица не найдены. Попробуй другое фото')
 
 
-def send_message(chat_id, message):
-    requests.post(BASE_URL + 'sendMessage', params={
-        "chat_id": chat_id,
-        "text": message
-    })
+def unidentified(update: Update, context: CallbackContext):
+    update.message.reply_text('Я умею работать только с прикрепленными изображениями')
 
 
-def start_poling():
-    last_update_id = None
-    while True:
-        r = requests.get(BASE_URL + 'getUpdates',
-                         params={
-                             'offset': last_update_id,
-                             'timeout': LONG_POLLING_TIMEOUT
-                         })
-        response_dict = json.loads(r.text)
-        for upd in response_dict["result"]:
-            last_update_id = upd["update_id"] + 1
-            # print(upd)
-            msg = upd["message"]
-            # print(msg)
-            chat_id = msg["chat"]["id"]
+def main():
+    updater = Updater(bot=bot, use_context=True)
 
-            photo_bytes = get_photo(msg)
-            if photo_bytes:
-                text = 'Ты отправил фото. Жди результат'
-                send_message(chat_id, text)
-                rec = recognition(photo_bytes)
-                if rec:
-                    gender, age, photo_bytes = rec
-                    caption = 'Recognized:\n' \
-                              f'Gender: {gender}\n' \
-                              f'Age: {age}'
-                    send_photo(chat_id, photo_bytes, caption)
-                else:
-                    text = 'Ups...\n' \
-                           'I can`t'
-                    send_message(chat_id, text)
-            else:
-                text = 'Ты не отправил фото'
-                send_message(chat_id, text)
+    # on different commands - answer in Telegram
+    updater.dispatcher.add_handler(CommandHandler('start', start))
+    updater.dispatcher.add_handler(CommandHandler('help', chat_help))
+
+    updater.dispatcher.add_handler(MessageHandler(Filters.photo, photo_recognize))
+    updater.dispatcher.add_handler(MessageHandler(Filters.all, unidentified))
+
+    # log all errors
+    updater.dispatcher.add_error_handler(error)
+
+    # Start the Bot
+    updater.start_polling()
+
+    # Run the bot until you press Ctrl-C or the process receives SIGINT,
+    # SIGTERM or SIGABRT. This should be used most of the time, since
+    # start_polling() is non-blocking and will stop the bot gracefully.
+    updater.idle()
 
 
-start_poling()
+if __name__ == '__main__':
+    logger.info('Start Bot')
+    main()
