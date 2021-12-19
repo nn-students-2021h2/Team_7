@@ -33,6 +33,7 @@ def error(update: Update, context: CallbackContext):
 
 
 def photo_recognize(update: Update, context: CallbackContext):
+    """Поиск лиц на фото, отправка обработанного изображения"""
     update.message.reply_text('Обработка изображения...')
     input_photo = bot.get_file(update.message.photo[-1]['file_id'])
     output_photo = processing_image(input_photo)
