@@ -3,5 +3,6 @@ TOKEN = ''  # bot token
 # Optionally use an anonymizing proxy (SOCKS/HTTPS) if you encounter Telegram access issues in your region
 PROXY = ''
 
-API_KEY = '',
-API_SECRET = ''
+FACE_PP_API_KEY = '',
+FACE_PP_API_SECRET = ''
+RAPID_API_KEY = ''

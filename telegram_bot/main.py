@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from setup import TOKEN
+from config import TOKEN
 from telegram import Bot, Update
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
