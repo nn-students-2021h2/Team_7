@@ -1,3 +1,6 @@
-opencv-python==4.5.4.60
-requests==2.26.0
-numpy==1.21.4
+python-telegram-bot
+python-telegram-bot[socks]
+socks
+pysocks
+Pillow~=8.4.0
+requests~=2.26.0
