@@ -4,3 +4,4 @@ socks
 pysocks
 Pillow~=8.4.0
 requests~=2.26.0
+environs==9.3.5

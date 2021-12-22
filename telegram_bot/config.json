@@ -1,0 +1,6 @@
+{
+    "total_max_requests": 4980,
+    "current_requests": 21,
+    "rapid_url": "https://face-detection6.p.rapidapi.com/img/face-age-gender",
+    "face_pp_url": "https://api-us.faceplusplus.com/facepp/v3/detect"
+}

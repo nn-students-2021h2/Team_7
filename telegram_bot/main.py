@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from config import TOKEN
+from telegram_bot.config import TOKEN, ConfigSingleton
 from telegram import Bot, Update
 from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
 
@@ -13,6 +13,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 bot = Bot(token=TOKEN)
+config_singleton = ConfigSingleton.getInstance()
 
 
 def start(update: Update, context: CallbackContext):
@@ -34,14 +35,21 @@ def error(update: Update, context: CallbackContext):
 
 def photo_recognize(update: Update, context: CallbackContext):
     """Поиск лиц на фото, отправка обработанного изображения"""
-    update.message.reply_text('Обработка изображения...')
-    input_photo = bot.get_file(update.message.photo[-1]['file_id'])
-    output_photo = processing_image(input_photo)
+    # проверка привышения лимита
+    if config_singleton.total_max_requests > config_singleton.current_requests:
+        input_photo = bot.get_file(update.message.photo[-1]['file_id'])
+        update.message.reply_text('Обработка изображения...')
+        config_singleton.current_requests += 1
+        print(f'[INFO] Current requests: {config_singleton.current_requests}')
+        config_singleton.update()
+        output_photo = processing_image(input_photo)
 
-    if output_photo:
-        update.message.reply_photo(photo=output_photo)
+        if output_photo:
+            update.message.reply_photo(photo=output_photo)
+        else:
+            update.message.reply_text('Лица не найдены. Попробуй другое фото')
     else:
-        update.message.reply_text('Лица не найдены. Попробуй другое фото')
+        update.message.reply_text('Месячный лимит исчерпан')
 
 
 def unidentified(update: Update, context: CallbackContext):
