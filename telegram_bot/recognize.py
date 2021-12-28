@@ -7,13 +7,16 @@ from PIL import Image, ImageDraw, ImageFont
 from requests import RequestException
 from telegram import File
 
-from telegram_bot.config import FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY
+from telegram_bot.config import FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, ConfigSingleton
+
+config_singleton = ConfigSingleton.getInstance()
 
 
 def get_face_values(image_url: str) -> list:
     """Отправка запроса по API FACE++"""
     responce = requests.post(
-        'https://api-us.faceplusplus.com/facepp/v3/detect',
+        config_singleton.face_pp_url,
+        # 'https://api-us.faceplusplus.com/facepp/v3/detect',
         data={
             'api_key': FACE_PP_API_KEY,
             'api_secret': FACE_PP_API_SECRET,
@@ -62,7 +65,8 @@ def draw_rectangles(buf: BytesIO, faces: list) -> bytes:
 def get_face_values_v2(image_url: str) -> list:
     """Отправка запроса по RAPID API"""
     responce = requests.post(
-        'https://face-detection6.p.rapidapi.com/img/face-age-gender',
+        config_singleton.rapid_url,
+        # 'https://face-detection6.p.rapidapi.com/img/face-age-gender',
         headers={
             'content-type': 'application/json',
             'x-rapidapi-host': 'face-detection6.p.rapidapi.com',
