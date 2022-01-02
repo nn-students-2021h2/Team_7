@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+
 # библиотека для загрузки данных из .env
 from environs import Env
 
@@ -17,6 +18,7 @@ RAPID_API_KEY = env.str("RAPID_API_KEY")
 
 class ConfigSingleton:
     """Класс-синглтон с данными из файла config.json"""
+
     __instance = None
 
     def __init__(self):
@@ -30,7 +32,6 @@ class ConfigSingleton:
             if not hasattr(self, key):
                 print('add: ', key, value)
                 setattr(self, key, value)
-
 
     @classmethod
     def get_instance(cls):

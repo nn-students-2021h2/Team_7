@@ -7,7 +7,12 @@ from PIL import Image, ImageDraw, ImageFont
 from requests import RequestException
 from telegram import File
 
-from telegram_bot.config import FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, ConfigSingleton
+from telegram_bot.config import (
+    FACE_PP_API_KEY,
+    FACE_PP_API_SECRET,
+    RAPID_API_KEY,
+    ConfigSingleton,
+)
 
 CONFIG = ConfigSingleton.get_instance()
 
@@ -21,8 +26,8 @@ def get_face_values(image_url: str) -> list:
             'api_key': FACE_PP_API_KEY,
             'api_secret': FACE_PP_API_SECRET,
             'image_url': image_url,
-            'return_attributes': 'gender,age'
-        }
+            'return_attributes': 'gender,age',
+        },
     )
     if not response.ok:
         raise RequestException
@@ -39,20 +44,22 @@ def draw_rectangles(buf: BytesIO, faces: list) -> bytes:
 
         for face in faces:
             area = face['face_rectangle']
-            # окантовка
-            pencil.rectangle((
-                area['left'],                   # x1
-                area['top'],                    # y1
-                area['left'] + area['width'],   # x2
-                area['top'] + area['height']    # y2
-            ))
+            pencil.rectangle(
+                (
+                    area['left'],  # x1
+                    area['top'],  # y1
+                    area['left'] + area['width'],  # x2
+                    area['top'] + area['height'],  # y2
+                )
+            )
             # api отдает атрибуты только для первых 5 лиц
             if attr := face.get('attributes'):
-                # подпись
                 pencil.text(
                     xy=(area['left'], area['top']),
                     text=f"{attr['gender']['value']}, {attr['age']['value']}y.o.",
-                    fill='green', anchor='ld', font=font
+                    fill='green',
+                    anchor='ld',
+                    font=font,
                 )
 
         with BytesIO() as new_img:
@@ -71,12 +78,9 @@ def get_face_values_v2(image_url: str) -> list:
         headers={
             'content-type': 'application/json',
             'x-rapidapi-host': 'face-detection6.p.rapidapi.com',
-            'x-rapidapi-key': RAPID_API_KEY
+            'x-rapidapi-key': RAPID_API_KEY,
         },
-        data=json.dumps({
-            'url': image_url,
-            'accuracy_boost': 3
-        })
+        data=json.dumps({'url': image_url, 'accuracy_boost': 3}),
     )
     if not response.ok:
         raise RequestException
@@ -93,13 +97,14 @@ def draw_rectangles_v2(buf: BytesIO, faces: list) -> bytes:
 
         for face in faces:
             area = face['BoundingBox']
-            # окантовка
             pencil.rectangle((area['startX'], area['startY'], area['endX'], area['endY']))
             pencil.text(
                 xy=(area['startX'], area['startY']),
                 text=f"{face['Gender']['Gender']}, "
                      f"{face['Age']['Age-Range']['Low']}-{face['Age']['Age-Range']['High']}y.o.",
-                fill='green', anchor='la', font=font
+                fill='green',
+                anchor='la',
+                font=font,
             )
 
         with BytesIO() as new_img:

@@ -2,7 +2,13 @@
 import logging
 
 from telegram import Bot, Update
-from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+)
 
 from telegram_bot.config import TOKEN, ConfigSingleton
 from telegram_bot.recognize import processing_image
@@ -10,8 +16,7 @@ from telegram_bot.recognize import processing_image
 # pylint: disable=W0613
 
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 bot = Bot(token=TOKEN)
