@@ -15,30 +15,32 @@ FACE_PP_API_SECRET = env.str("FACE_PP_API_SECRET")
 RAPID_API_KEY = env.str("RAPID_API_KEY")
 
 
-# класс с данными из файла config.json
 class ConfigSingleton:
+    """Класс-синглтон с данными из файла config.json"""
     __instance = None
 
     def __init__(self):
-        if not ConfigSingleton.__instance:
-            # задает атрибуты из файла
-            with open('config.json') as f:
-                data = json.load(f)
-            for key, value in data.items():
-                if not hasattr(self, key):
-                    print("add: ", key, value)
-                    setattr(self, key, value)
-        else:
-            raise ValueError(f"Instance already created")
+
+        if ConfigSingleton.__instance:
+            raise ValueError('Instance already created')
+
+        with open('config.json', encoding='UTF-8') as config:
+            data = json.load(config)
+        for key, value in data.items():
+            if not hasattr(self, key):
+                print('add: ', key, value)
+                setattr(self, key, value)
+
 
     @classmethod
-    def getInstance(cls):
+    def get_instance(cls):
+        """Метод создания/получения единственного объекта класса"""
         if not cls.__instance:
             cls.__instance = ConfigSingleton()
         return cls.__instance
 
-    # обновление данных в файле
     def update(self):
+        """Обновление данных в файле"""
         print(self.__dict__)
-        with open('config.json', 'w') as f:
-            json.dump(self.__dict__, f, ensure_ascii=False, indent=4)
+        with open('config.json', 'w', encoding='UTF-8') as config:
+            json.dump(self.__dict__, config, ensure_ascii=False, indent=4)

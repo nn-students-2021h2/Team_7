@@ -9,13 +9,13 @@ from telegram import File
 
 from telegram_bot.config import FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, ConfigSingleton
 
-config_singleton = ConfigSingleton.getInstance()
+CONFIG = ConfigSingleton.get_instance()
 
 
 def get_face_values(image_url: str) -> list:
     """Отправка запроса по API FACE++"""
-    responce = requests.post(
-        config_singleton.face_pp_url,
+    response = requests.post(
+        CONFIG.face_pp_url,
         # 'https://api-us.faceplusplus.com/facepp/v3/detect',
         data={
             'api_key': FACE_PP_API_KEY,
@@ -24,10 +24,10 @@ def get_face_values(image_url: str) -> list:
             'return_attributes': 'gender,age'
         }
     )
-    if not responce.ok:
+    if not response.ok:
         raise RequestException
 
-    r_decode = json.loads(responce.content.decode())
+    r_decode = json.loads(response.content.decode())
     return r_decode['faces']
 
 
@@ -56,7 +56,8 @@ def draw_rectangles(buf: BytesIO, faces: list) -> bytes:
                 )
 
         with BytesIO() as new_img:
-            photo.save(new_img, format='JPEG')  # сохраняем новое изображение в буфер и сразу забираем в bytes
+            # сохраняем новое изображение в буфер и сразу забираем в bytes
+            photo.save(new_img, format='JPEG')
             byte_im = new_img.getvalue()
 
     return byte_im
@@ -64,8 +65,8 @@ def draw_rectangles(buf: BytesIO, faces: list) -> bytes:
 
 def get_face_values_v2(image_url: str) -> list:
     """Отправка запроса по RAPID API"""
-    responce = requests.post(
-        config_singleton.rapid_url,
+    response = requests.post(
+        CONFIG.rapid_url,
         # 'https://face-detection6.p.rapidapi.com/img/face-age-gender',
         headers={
             'content-type': 'application/json',
@@ -77,10 +78,10 @@ def get_face_values_v2(image_url: str) -> list:
             'accuracy_boost': 3
         })
     )
-    if not responce.ok:
+    if not response.ok:
         raise RequestException
 
-    r_decode = json.loads(responce.content.decode())
+    r_decode = json.loads(response.content.decode())
     return r_decode['detected_faces']
 
 
@@ -102,7 +103,8 @@ def draw_rectangles_v2(buf: BytesIO, faces: list) -> bytes:
             )
 
         with BytesIO() as new_img:
-            photo.save(new_img, format='JPEG')  # сохраняем новое изображение в буфер и сразу забираем в bytes
+            # сохраняем новое изображение в буфер и сразу забираем в bytes
+            photo.save(new_img, format='JPEG')
             byte_im = new_img.getvalue()
 
     return byte_im
@@ -112,11 +114,10 @@ def processing_image(photo: File) -> [bytes]:
     """Общая функция работы с изображением"""
     face_values = get_face_values_v2(photo.file_path)
     if not face_values:
-        return
+        return None
 
     with BytesIO() as buf:
         photo.download(out=buf)  # загружаем фото из сообщения в буфер
         photo_bytes = draw_rectangles_v2(buf, face_values)
 
     return photo_bytes
-
