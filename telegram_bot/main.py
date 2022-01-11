@@ -1,19 +1,26 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from telegram_bot.config import TOKEN, ConfigSingleton
 from telegram import Bot, Update
-from telegram.ext import CallbackContext, CommandHandler, Filters, MessageHandler, Updater
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+)
 
+from telegram_bot.config import TOKEN, ConfigSingleton
 from telegram_bot.recognize import processing_image
 
+# pylint: disable=W0613
+
 # Enable logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-                    level=logging.INFO)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 logger = logging.getLogger(__name__)
 bot = Bot(token=TOKEN)
-config_singleton = ConfigSingleton.getInstance()
+CONFIG = ConfigSingleton.get_instance()
 
 
 def start(update: Update, context: CallbackContext):
@@ -35,13 +42,13 @@ def error(update: Update, context: CallbackContext):
 
 def photo_recognize(update: Update, context: CallbackContext):
     """Поиск лиц на фото, отправка обработанного изображения"""
-    # проверка привышения лимита
-    if config_singleton.total_max_requests > config_singleton.current_requests:
+    # проверка превышения лимита
+    if CONFIG.total_max_requests > CONFIG.current_requests:
         input_photo = bot.get_file(update.message.photo[-1]['file_id'])
         update.message.reply_text('Обработка изображения...')
-        config_singleton.current_requests += 1
-        print(f'[INFO] Current requests: {config_singleton.current_requests}')
-        config_singleton.update()
+        CONFIG.current_requests += 1
+        print(f'[INFO] Current requests: {CONFIG.current_requests}')
+        CONFIG.update()
         output_photo = processing_image(input_photo)
 
         if output_photo:
@@ -53,10 +60,13 @@ def photo_recognize(update: Update, context: CallbackContext):
 
 
 def unidentified(update: Update, context: CallbackContext):
+    """Обработка ситуации с неизвестным вложением в сообщении"""
     update.message.reply_text('Я умею работать только с прикрепленными изображениями')
 
 
-def main():
+if __name__ == '__main__':
+    logger.info('Start Bot')
+
     updater = Updater(bot=bot, use_context=True)
 
     # on different commands - answer in Telegram
@@ -76,8 +86,3 @@ def main():
     # SIGTERM or SIGABRT. This should be used most of the time, since
     # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
-
-
-if __name__ == '__main__':
-    logger.info('Start Bot')
-    main()

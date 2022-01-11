@@ -1,3 +1,4 @@
+# pylint: skip-file
 def send_message(msg, chat_id):
     pass
 
