@@ -116,7 +116,6 @@ def draw_rectangles_v2(buf: BytesIO, faces: list) -> bytes:
 
 
 def processing_image(photo: File) -> [bytes]:
-    """Общая функция работы с изображением"""
     face_values = get_face_values_v2(photo.file_path)
     if not face_values:
         return None
