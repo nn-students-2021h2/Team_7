@@ -2,6 +2,9 @@
 import json
 
 # библиотека для загрузки данных из .env
+import logging
+import os
+
 from environs import Env
 
 env = Env()
@@ -14,6 +17,10 @@ PROXY = env.str("PROXY")
 FACE_PP_API_KEY = env.str("FACE_PP_API_KEY")
 FACE_PP_API_SECRET = env.str("FACE_PP_API_SECRET")
 RAPID_API_KEY = env.str("RAPID_API_KEY")
+json_path = os.path.join(os.path.dirname(__file__), 'config.json')
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 class ConfigSingleton:
@@ -26,11 +33,11 @@ class ConfigSingleton:
         if ConfigSingleton.__instance:
             raise ValueError('Instance already created')
 
-        with open('config.json', encoding='UTF-8') as config:
+        with open(json_path, encoding='UTF-8') as config:
             data = json.load(config)
         for key, value in data.items():
             if not hasattr(self, key):
-                print('add: ', key, value)
+                logger.info(f'add: {key} {value}')
                 setattr(self, key, value)
 
     @classmethod
@@ -42,6 +49,9 @@ class ConfigSingleton:
 
     def update(self):
         """Обновление данных в файле"""
-        print(self.__dict__)
+        logger.info(self.__dict__)
         with open('config.json', 'w', encoding='UTF-8') as config:
             json.dump(self.__dict__, config, ensure_ascii=False, indent=4)
+
+    # TODO
+    # add scheduler for update current_requests in config.json every month
