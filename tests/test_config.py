@@ -1,3 +1,4 @@
+import os
 import unittest
 
 from telegram_bot.config import ConfigSingleton, TOKEN, FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, json_path
@@ -12,7 +13,7 @@ class MyTestCase(unittest.TestCase):
         self.assertTrue(FACE_PP_API_KEY)
         self.assertTrue(FACE_PP_API_SECRET)
         self.assertTrue(RAPID_API_KEY)
-        self.assertTrue(json_path)
+        self.assertTrue(os.path.exists(json_path))
 
     def test_config_class(self):
         self.assertTrue(hasattr(self.config, 'total_max_requests'))
