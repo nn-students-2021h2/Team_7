@@ -47,7 +47,8 @@ def photo_recognize(update: Update, context: CallbackContext):
         input_photo = bot.get_file(update.message.photo[-1]['file_id'])
         update.message.reply_text('Обработка изображения...')
         CONFIG.current_requests += 1
-        print(f'[INFO] Current requests: {CONFIG.current_requests}')
+        logger.info(f'Current requests: {CONFIG.current_requests}')
+        # print(f'[INFO] Current requests: {CONFIG.current_requests}')
         CONFIG.update()
         output_photo = processing_image(input_photo)
 
