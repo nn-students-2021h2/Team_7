@@ -6,7 +6,7 @@ from pathlib import Path
 from environs import Env
 
 env = Env()
-env.read_env(".env.dist")
+env.read_env()
 
 TOKEN = env.str("TOKEN")  # bot token
 # Optionally use an anonymizing proxy (SOCKS/HTTPS) if you encounter Telegram access issues in your region
