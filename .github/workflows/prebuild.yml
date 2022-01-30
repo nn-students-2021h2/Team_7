@@ -25,11 +25,7 @@ jobs:
           envFile: 'telegram_bot/dev.env'
 
       - name: Testing (unit-tests)
-        run: |
-          echo ${{env.TOKEN}}
-#          python -m unittest
-        env:
-          TOKEN: env.TOKEN
+        run: python -m unittest
 
       - name: Analysing the code with pylint
         run: pylint --rcfile=.pylintrc $(find . -name "*.py" | xargs)
