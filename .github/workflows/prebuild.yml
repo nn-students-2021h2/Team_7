@@ -21,9 +21,9 @@ jobs:
           pip install pylint
 
       - name: Testing (unit-tests)
-        run: |
-          export READ_DOT_ENV_FILE=True
-          python -m unittest
+        run: python -m unittest
+        env:
+          READ_DOT_ENV_FILE: True
 
       - name: Analysing the code with pylint
         run: pylint --rcfile=.pylintrc $(find . -name "*.py" | xargs)
