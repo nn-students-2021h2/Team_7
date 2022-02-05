@@ -6,6 +6,7 @@ import logging
 import os
 
 from environs import Env
+from sqlalchemy import create_engine
 
 env = Env()
 env.read_env()
@@ -17,6 +18,12 @@ PROXY = env.str("PROXY")
 FACE_PP_API_KEY = env.str("FACE_PP_API_KEY")
 FACE_PP_API_SECRET = env.str("FACE_PP_API_SECRET")
 RAPID_API_KEY = env.str("RAPID_API_KEY")
+DATABASE = env.str("DATABASE")
+
+# подключение к бд
+engine = create_engine(f"sqlite:///{DATABASE}"
+                       "?check_same_thread=False")
+
 json_path = os.path.join(os.path.dirname(__file__), 'config.json')
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
