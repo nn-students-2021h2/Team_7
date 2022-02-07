@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
+import logging
+from pathlib import Path
 
 # библиотека для загрузки данных из .env
-import logging
-import os
-
 from environs import Env
 from sqlalchemy import create_engine
 
@@ -24,7 +23,7 @@ DATABASE = env.str("DATABASE")
 engine = create_engine(f"sqlite:///{DATABASE}"
                        "?check_same_thread=False")
 
-json_path = os.path.join(os.path.dirname(__file__), 'config.json')
+json_path = Path(Path(__file__).parent, 'config.json')
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
