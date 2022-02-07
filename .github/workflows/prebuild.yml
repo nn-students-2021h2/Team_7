@@ -1,9 +1,9 @@
-name: Linter
+name: Checking linter and testing
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
-  linter:
+  build:
     runs-on: ubuntu-latest
     
     steps:
@@ -19,6 +19,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install --quiet --requirement requirements.txt
           pip install pylint
-          
+
+      - uses: cardinalby/export-env-action@v1
+        with:
+          envFile: 'telegram_bot/dev.env'
+
+      - name: Testing (unit-tests)
+        run: python -m unittest
+
       - name: Analysing the code with pylint
-        run: pylint $(find . -name "*.py" | xargs)
+        run: pylint --rcfile=.pylintrc $(find . -name "*.py" | xargs)
