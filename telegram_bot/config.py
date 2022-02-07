@@ -3,6 +3,7 @@ import json
 import logging
 from pathlib import Path
 
+# библиотека для загрузки данных из .env
 from environs import Env
 
 env = Env()
@@ -15,6 +16,7 @@ PROXY = env.str("PROXY")
 FACE_PP_API_KEY = env.str("FACE_PP_API_KEY")
 FACE_PP_API_SECRET = env.str("FACE_PP_API_SECRET")
 RAPID_API_KEY = env.str("RAPID_API_KEY")
+
 json_path = Path(Path(__file__).parent, 'config.json')
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
