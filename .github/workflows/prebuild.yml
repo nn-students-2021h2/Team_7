@@ -19,6 +19,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install --quiet --requirement requirements.txt
           pip install pylint
+
       - uses: cardinalby/export-env-action@v1
         with:
           envFile: 'telegram_bot/dev.env'
@@ -27,4 +28,5 @@ jobs:
         run: python -m unittest
 
       - name: Analysing the code with pylint
+
         run: pylint --rcfile=.pylintrc $(find . -name "*.py" | xargs)
