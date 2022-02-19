@@ -64,7 +64,12 @@ def get_user_requests_count(user_id) -> int:
 
 
 def get_user(user_id) -> User:
-    """Получить юзера по id"""
+    """
+    Получить пользователя по id
+    
+    :param user_id:
+    :return:
+    """
     with Session(engine) as s:
         # session = sessionmaker(bind=engine)
         # s = session()
