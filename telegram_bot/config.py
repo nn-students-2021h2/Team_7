@@ -5,6 +5,7 @@ from pathlib import Path
 
 # библиотека для загрузки данных из .env
 from environs import Env
+from sqlalchemy import create_engine
 
 env = Env()
 env.read_env()
@@ -16,6 +17,13 @@ PROXY = env.str("PROXY")
 FACE_PP_API_KEY = env.str("FACE_PP_API_KEY")
 FACE_PP_API_SECRET = env.str("FACE_PP_API_SECRET")
 RAPID_API_KEY = env.str("RAPID_API_KEY")
+
+DATABASE = env.str("DATABASE")
+
+# подключение к бд
+engine = create_engine(f"sqlite:///{DATABASE}"
+                       "?check_same_thread=False")
+
 
 json_path = Path(Path(__file__).parent, 'config.json')
 
