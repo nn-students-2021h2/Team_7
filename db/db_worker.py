@@ -66,7 +66,7 @@ def get_user_requests_count(user_id) -> int:
 def get_user(user_id) -> User:
     """
     Получить пользователя по id
-    
+
     :param user_id:
     :return:
     """
