@@ -37,6 +37,7 @@ def start(update: Update, context: CallbackContext):
 
 
 def user_requests_count(update: Update, context: CallbackContext):
+    """get user requests count"""
     count = get_user_requests_count(update.effective_user.id)
     if count is None:
         update.message.reply_text('Тебя нет в базе\U0001F97A\n'
@@ -48,6 +49,7 @@ def user_requests_count(update: Update, context: CallbackContext):
 
 
 def users_count(update: Update, context: CallbackContext):
+    """get users count"""
     count = get_users_count()
     update.message.reply_text(f'\U0001F465 Число юзеров: {count}!')
 

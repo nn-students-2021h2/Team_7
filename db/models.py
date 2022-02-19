@@ -5,8 +5,8 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-# таблица с юзерами
 class User(Base):
+    """таблица с юзерами"""
     __tablename__ = 'Users'
 
     user_id = Column(BigInteger, primary_key=True)
