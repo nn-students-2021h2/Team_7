@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from db.models import User
 
 from telegram_bot.config import engine
+# pylint: disable=C0103
 
 
 def add_person(user: User):

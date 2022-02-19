@@ -39,10 +39,10 @@ def start(update: Update, context: CallbackContext):
 def user_requests_count(update: Update, context: CallbackContext):
     count = get_user_requests_count(update.effective_user.id)
     if count is None:
-        update.message.reply_text(f'Тебя нет в базе\U0001F97A\n'
-                                  f'Нажми /start, чтобы это исправить!')
+        update.message.reply_text('Тебя нет в базе\U0001F97A\n'
+                                  'Нажми /start, чтобы это исправить!')
     elif count == 0:
-        update.message.reply_text(f'\U0001F9EE Ты еще не делал запросов!')
+        update.message.reply_text('\U0001F9EE Ты еще не делал запросов!')
     else:
         update.message.reply_text(f'\U0001F9EE Число запросов: {count}!')
 
@@ -75,8 +75,8 @@ def photo_recognize(update: Update, context: CallbackContext):
     # проверка есть ли пользователь в базе
     user = get_user(update.effective_user.id)
     if not user:
-        update.message.reply_text(f'Тебя нет в базе\U0001F97A\n'
-                                  f'Нажми /start, чтобы это исправить и пользоваться ботом!')
+        update.message.reply_text('Тебя нет в базе\U0001F97A\n'
+                                  'Нажми /start, чтобы это исправить и пользоваться ботом!')
         return
 
     # проверка превышения лимита

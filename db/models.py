@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, BigInteger
 from sqlalchemy.ext.declarative import declarative_base
+# pylint: disable=C0115, R0903
 
 Base = declarative_base()
 
