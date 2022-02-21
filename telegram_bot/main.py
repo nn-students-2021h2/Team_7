@@ -13,6 +13,7 @@ from telegram.ext import (
 from db.db_worker import add_person, increase_requests_count, get_user_requests_count, get_users_count, get_user
 from db.models import User, Base
 from telegram_bot.config import TOKEN, ConfigSingleton, engine
+from telegram_bot.ping_site import ping
 from telegram_bot.recognize import processing_image
 
 # pylint: disable=W0613
@@ -38,8 +39,8 @@ def start(update: Update, context: CallbackContext):
 
 def get_ping(update: Update, context: CallbackContext):
     """Get ping"""
-    ping = 100
-    update.message.reply_text(f'\U0001F310 Пинг: {ping}!')
+    min_time, max_time, avg_time = ping()
+    update.message.reply_text(f'\U0001F310 Пинг:\n{min_time=}\n{max_time=}\n{avg_time=}')
 
 
 def user_requests_count(update: Update, context: CallbackContext):
