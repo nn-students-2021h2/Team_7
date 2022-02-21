@@ -11,7 +11,7 @@ from telegram_bot.config import ConfigSingleton
 CONFIG = ConfigSingleton.get_instance()
 logger = logging.getLogger(__name__)
 
-min_time = max_time = avg_time = last_request = None
+MIN_TIME = MAX_TIME = AVG_TIME = LAST_REQUEST = None
 
 response_times = []
 
@@ -27,22 +27,22 @@ def ping_site() -> None:
 def ping() -> Tuple[int, int, int]:
     """Функция для пинга сайта и получения связки максимального, минимального и среднего времени ответа"""
     # Полученные значения и время последнего запроса лежат глобально
-    global avg_time, min_time, max_time, last_request
+    global AVG_TIME, MIN_TIME, MAX_TIME, LAST_REQUEST
 
     # Выполнение запросов не чаще одного раза в минуту
-    if not last_request or (datetime.now() - last_request).seconds > 60:
+    if not LAST_REQUEST or (datetime.now() - LAST_REQUEST).seconds > 60:
 
-        with ThreadPoolExecutor(32) as pool:
+        with ThreadPoolExecutor(8) as pool:
             for _ in range(10):
                 future = pool.submit(ping_site)
                 future.result()
 
-        min_time = min(response_times) / 1_000_000
-        max_time = max(response_times) / 1_000_000
-        avg_time = (sum(response_times) / 1_000_000) / len(response_times)
+        MIN_TIME = min(response_times) / 1_000_000
+        MAX_TIME = max(response_times) / 1_000_000
+        AVG_TIME = (sum(response_times) / 1_000_000) / len(response_times)
 
-        last_request = datetime.now()
+        LAST_REQUEST = datetime.now()
         response_times.clear()
 
-    logger.info(f'PING SITE: {min_time=}, {max_time=}, {avg_time=}')
-    return min_time, max_time, avg_time
+    logger.info(f'PING SITE: {MIN_TIME=}, {MAX_TIME=}, {AVG_TIME=}')
+    return MIN_TIME, MAX_TIME, AVG_TIME
