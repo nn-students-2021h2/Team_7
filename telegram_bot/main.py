@@ -36,6 +36,12 @@ def start(update: Update, context: CallbackContext):
                               'Я распознаю на нём лица и определю пол и возраст\U0001F440')
 
 
+def get_ping(update: Update, context: CallbackContext):
+    """Get ping"""
+    ping = 100
+    update.message.reply_text(f'\U0001F310 Пинг: {ping}!')
+
+
 def user_requests_count(update: Update, context: CallbackContext):
     """get user requests count"""
     count = get_user_requests_count(update.effective_user.id)
@@ -122,6 +128,7 @@ if __name__ == '__main__':
     updater.dispatcher.add_handler(CommandHandler('help', chat_help))
     updater.dispatcher.add_handler(CommandHandler('my_count', user_requests_count))
     updater.dispatcher.add_handler(CommandHandler('users_count', users_count))
+    updater.dispatcher.add_handler(CommandHandler('ping', get_ping))
 
     updater.dispatcher.add_handler(MessageHandler(Filters.photo, photo_recognize))
     updater.dispatcher.add_handler(MessageHandler(Filters.all, unidentified))
