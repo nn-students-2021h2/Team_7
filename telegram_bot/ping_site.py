@@ -7,21 +7,21 @@ from typing import Tuple
 import requests
 
 from telegram_bot.config import ConfigSingleton
+# pylint: disable=W0603
 
 CONFIG = ConfigSingleton.get_instance()
 logger = logging.getLogger(__name__)
 
 MIN_TIME = MAX_TIME = AVG_TIME = LAST_REQUEST = None
 
-response_times = []
+RESPONSE_TIMES = []
 
 
 def ping_site() -> None:
     """Функция получения времени ответа на GET-запрос"""
-    global response_times
     response = requests.get(CONFIG.rapid_site)
     if response.ok:
-        response_times.append(response.elapsed.microseconds)  # значения маленькие, поэтому храним в мкс
+        RESPONSE_TIMES.append(response.elapsed.microseconds)  # значения маленькие, поэтому храним в мкс
 
 
 def ping() -> Tuple[int, int, int]:
@@ -37,12 +37,12 @@ def ping() -> Tuple[int, int, int]:
                 future = pool.submit(ping_site)
                 future.result()
 
-        MIN_TIME = min(response_times) / 1_000_000
-        MAX_TIME = max(response_times) / 1_000_000
-        AVG_TIME = (sum(response_times) / 1_000_000) / len(response_times)
+        MIN_TIME = min(RESPONSE_TIMES) / 1_000_000
+        MAX_TIME = max(RESPONSE_TIMES) / 1_000_000
+        AVG_TIME = (sum(RESPONSE_TIMES) / 1_000_000) / len(RESPONSE_TIMES)
 
         LAST_REQUEST = datetime.now()
-        response_times.clear()
+        RESPONSE_TIMES.clear()
 
     logger.info(f'PING SITE: {MIN_TIME=}, {MAX_TIME=}, {AVG_TIME=}')
     return MIN_TIME, MAX_TIME, AVG_TIME
