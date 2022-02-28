@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: C0412
+# pylint: disable=C0412
 import logging
 
 from telegram import Bot, Update
@@ -18,7 +18,8 @@ from misc.singleton import ConfigSingleton
 from telegram_bot.ping_site import ping
 from telegram_bot.recognize import processing_image
 
-# pylint: disable=W0613, R0801
+# pylint: disable=W0613
+# pylint: disable=R0801
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
