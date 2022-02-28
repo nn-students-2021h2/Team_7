@@ -51,4 +51,5 @@ def ping() -> Tuple[int, int, int]:
 
 
 async def async_ping():
+    """Функция для пинга сайта и получения связки максимального, минимального и среднего времени ответа"""
     return await run_blocking_cpu(ping)

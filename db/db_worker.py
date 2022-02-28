@@ -26,6 +26,7 @@ def add_person(user: User):
 
 
 async def async_add_person(user: User):
+    """Добавление юзера в бд"""
     await run_blocking_io(add_person, user)
 
 
@@ -44,6 +45,7 @@ def increase_requests_count(user_id):
 
 
 async def async_increase_requests_count(user_id):
+    """Увеличение счетчика запросов пользователя"""
     await run_blocking_io(increase_requests_count, user_id)
 
 
@@ -60,6 +62,7 @@ def get_users_count() -> int:
 
 
 async def async_get_users_count():
+    """Количество пользователей бота"""
     return await run_blocking_io(get_users_count)
 
 
@@ -77,6 +80,7 @@ def get_user_requests_count(user_id) -> int:
 
 
 async def async_get_user_requests_count(user_id):
+    """Количество запросов пользователя"""
     return await run_blocking_io(get_user_requests_count, user_id)
 
 
@@ -94,4 +98,5 @@ def get_user(user_id) -> User:
 
 
 async def async_get_user(user_id):
+    """Получить пользователя по id"""
     return await run_blocking_io(get_user, user_id)

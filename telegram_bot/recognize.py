@@ -8,13 +8,13 @@ from requests import RequestException
 from telegram import File
 
 from misc.async_wraps import run_blocking_io
+from misc.singleton import ConfigSingleton
 from telegram_bot.config import (
     FACE_PP_API_KEY,
     FACE_PP_API_SECRET,
     RAPID_API_KEY,
     TOKEN,
 )
-from misc.singleton import ConfigSingleton
 
 CONFIG = ConfigSingleton.get_instance()
 

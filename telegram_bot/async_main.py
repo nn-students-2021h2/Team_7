@@ -7,12 +7,14 @@ from aiogram.types import File
 from db.db_worker import async_add_person, async_get_user_requests_count, async_get_users_count, \
     async_increase_requests_count, async_get_user
 from db.models import User
-from telegram_bot.config import TOKEN
-from misc.singleton import ConfigSingleton
 
-# Configure logging
+from telegram_bot.config import TOKEN
 from telegram_bot.ping_site import async_ping
 from telegram_bot.recognize import async_processing_image
+
+from misc.singleton import ConfigSingleton
+
+# pylint: disable=W0613, C0412, R0801
 
 logging.basicConfig(level=logging.INFO)
 
@@ -80,7 +82,7 @@ async def users_count(message: types.Message):
 
 
 @dp.message_handler(content_types=types.ContentType.PHOTO)
-async def users_count(message: types.Message):
+async def photo_recognize(message: types.Message):
     """Поиск лиц на фото, отправка обработанного изображения"""
 
     # проверка есть ли пользователь в базе
