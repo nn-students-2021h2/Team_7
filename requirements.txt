@@ -5,3 +5,5 @@ pysocks
 Pillow~=8.4.0
 requests~=2.26.0
 environs==9.3.5
+SQLAlchemy==1.4.31
+aiogram==2.19
