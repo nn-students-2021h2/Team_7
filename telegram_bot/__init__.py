@@ -1,1 +1,2 @@
-# pylint: disable=R0801, duplicate-code
+# pylint: disable=R0801
+# pylint: disable=duplicate-code

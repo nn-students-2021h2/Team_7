@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=C0412
-# pylint: disable=R0801, duplicate-code
+# pylint: disable=R0801
+# pylint: disable=duplicate-code
 import logging
 
 from telegram import Bot, Update

@@ -1,6 +1,6 @@
 import logging
-# pylint: disable=R0801, duplicate-code
-
+# pylint: disable=R0801
+# pylint: disable=duplicate-code
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import CommandStart, Command
 from aiogram.types import File
