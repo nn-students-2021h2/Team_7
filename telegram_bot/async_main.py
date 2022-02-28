@@ -43,13 +43,13 @@ async def start(message: types.Message):
 @dp.message_handler(Command('help'))
 async def chat_help(message: types.Message):
     """Send a message when the command /help is issued."""
-    text = "Я умею распознавать людей на фотографии\U0001F440.\n" \
-           "Отправь мне фото.\n" \
-           "\U0001F916 /start - запуск бота\n" \
-           "\U00002753 /help - справка\n" \
-           "\U0001F9EE /my_count - количество твоих распознаваний\n" \
-           "\U0001F465 /users_count - количество пользователей бота"
-    await message.answer(text)
+    message_text = "Я умею распознавать людей на фотографии\U0001F440.\n" \
+                   "Отправь мне фото.\n" \
+                   "\U0001F916 /start - запуск бота\n" \
+                   "\U00002753 /help - справка\n" \
+                   "\U0001F9EE /my_count - количество твоих распознаваний\n" \
+                   "\U0001F465 /users_count - количество пользователей бота"
+    await message.answer(message_text)
 
 
 @dp.message_handler(Command('ping'))
