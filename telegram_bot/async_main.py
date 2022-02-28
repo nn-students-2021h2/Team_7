@@ -14,8 +14,7 @@ from telegram_bot.recognize import async_processing_image
 
 from misc.singleton import ConfigSingleton
 
-# pylint: disable=W0613, C0412
-# pylint: disable=R0801
+# pylint: disable=W0613, C0412, duplicate-code
 
 logging.basicConfig(level=logging.INFO)
 
