@@ -1,4 +1,5 @@
 import logging
+# pylint: disable=R0801, duplicate-code
 
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.filters import CommandStart, Command
@@ -14,7 +15,7 @@ from telegram_bot.recognize import async_processing_image
 
 from misc.singleton import ConfigSingleton
 
-# pylint: disable=W0613, C0412, duplicate-code
+# pylint: disable=W0613, C0412
 
 logging.basicConfig(level=logging.INFO)
 
