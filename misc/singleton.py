@@ -1,5 +1,7 @@
 import json
 
+from jsonschema import validate
+
 from telegram_bot.config import json_path, logger
 
 
@@ -14,6 +16,7 @@ class ConfigSingleton:
 
         with open(json_path, encoding='UTF-8') as config:
             data = json.load(config)
+            self.check_config(data)
         for key, value in data.items():
             if not hasattr(self, key):
                 logger.info(f'add: {key} {value}')
@@ -29,8 +32,22 @@ class ConfigSingleton:
     def update(self):
         """Обновление данных в файле"""
         logger.info(self.__dict__)
-        with open('config.json', 'w', encoding='UTF-8') as config:
+        with open(json_path, 'w', encoding='UTF-8') as config:
             json.dump(self.__dict__, config, ensure_ascii=False, indent=4)
+
+    def check_config(self, data: dict):
+        """Метод валидации конфиг-файла"""
+        validation_schema = {
+            "type": "object",
+            "properties": {
+                "total_max_requests": {"type": "number"},
+                "current_requests": {"type": "number"},
+                "rapid_url": {"type": "string"},
+                "rapid_site": {"type": "string"}
+            },
+            "additionalProperties": False
+        }
+        validate(instance=data, schema=validation_schema)
 
     # TODO
     # add scheduler for update current_requests in config.json every month
