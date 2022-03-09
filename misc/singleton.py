@@ -45,7 +45,7 @@ class ConfigSingleton:
                 "rapid_url": {"type": "string"},
                 "rapid_site": {"type": "string"}
             },
-            "additionalProperties": False
+            "additionalProperties": True
         }
         validate(instance=data, schema=validation_schema)
 
