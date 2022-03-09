@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=C0412
+# pylint: disable=R0801
+# pylint: disable=duplicate-code
 import logging
 
 from telegram import Bot, Update
@@ -12,7 +15,8 @@ from telegram.ext import (
 
 from db.db_worker import add_person, increase_requests_count, get_user_requests_count, get_users_count, get_user
 from db.models import User, Base
-from telegram_bot.config import TOKEN, ConfigSingleton, engine
+from telegram_bot.config import TOKEN, engine
+from misc.singleton import ConfigSingleton
 from telegram_bot.ping_site import ping
 from telegram_bot.recognize import processing_image
 

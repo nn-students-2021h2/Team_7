@@ -6,7 +6,9 @@ from typing import Tuple
 
 import requests
 
-from telegram_bot.config import ConfigSingleton
+from misc.async_wraps import run_blocking_cpu
+from misc.singleton import ConfigSingleton
+
 # pylint: disable=W0603
 
 CONFIG = ConfigSingleton.get_instance()
@@ -46,3 +48,8 @@ def ping() -> Tuple[int, int, int]:
 
     logger.info(f'PING SITE: {MIN_TIME=}, {MAX_TIME=}, {AVG_TIME=}')
     return MIN_TIME, MAX_TIME, AVG_TIME
+
+
+async def async_ping():
+    """Функция для пинга сайта и получения связки максимального, минимального и среднего времени ответа"""
+    return await run_blocking_cpu(ping)

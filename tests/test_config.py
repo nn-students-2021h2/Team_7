@@ -2,7 +2,8 @@
 from pathlib import Path
 import unittest
 
-from telegram_bot.config import ConfigSingleton, TOKEN, FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, json_path
+from telegram_bot.config import TOKEN, FACE_PP_API_KEY, FACE_PP_API_SECRET, RAPID_API_KEY, json_path
+from misc.singleton import ConfigSingleton
 
 
 class MyTestCase(unittest.TestCase):
