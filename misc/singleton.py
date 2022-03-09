@@ -35,7 +35,8 @@ class ConfigSingleton:
         with open(json_path, 'w', encoding='UTF-8') as config:
             json.dump(self.__dict__, config, ensure_ascii=False, indent=4)
 
-    def check_config(self, data: dict):
+    @staticmethod
+    def check_config(data: dict):
         """Метод валидации конфиг-файла"""
         validation_schema = {
             "type": "object",
